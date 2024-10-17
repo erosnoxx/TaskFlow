@@ -4,6 +4,7 @@ from flask import Flask
 
 load_dotenv()
 
+
 class Environment:
     def __init__(self, app: Flask) -> None:
         app.static_folder = os.getenv('STATIC_FOLDER')

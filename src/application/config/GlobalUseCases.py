@@ -1,0 +1,12 @@
+from src.application.config.GlobalServices import GlobalServices
+from src.application.useCases.user.CreatePersonUseCase import CreatePersonUseCase
+from src.application.useCases.user.CreateUserUseCase import CreateUserUseCase
+
+
+class GlobalUseCases:
+    def __init__(self, services: GlobalServices):
+        self.create_person_usecase = CreatePersonUseCase(person_service=services.person_service)
+        self.create_user_usecase = CreateUserUseCase(
+            user_service=services.user_service,
+            person_service=services.person_service,
+            hash_service=services.hash_service)
