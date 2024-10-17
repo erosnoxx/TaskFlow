@@ -17,3 +17,9 @@ class UserService:
             email=email,
             password_hash=password_hash)
         return self.user_repository.add(obj=user_entity)
+
+    def find_email(self, email: str) -> UserEntity:
+        return self.user_repository.get_by_email(email=email)
+
+    def find_username(self, username: str) -> UserEntity:
+        return self.user_repository.get_by_username(username=username)

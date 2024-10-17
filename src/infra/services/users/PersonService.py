@@ -19,3 +19,13 @@ class PersonService:
             birthdate=birthdate,
             phone_number=phone_number)
         return self.person_repository.add(obj=person_entity)
+    
+    def get_person_by_id(self, person_id: int) -> PersonEntity:
+        return self.person_repository.get(obj_id=person_id)
+
+    def delete_person_by_id(self, person_id: int) -> bool:
+        try:
+            self.person_repository.delete(obj_id=person_id)
+            return True
+        except Exception:
+            return False
