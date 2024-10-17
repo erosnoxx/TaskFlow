@@ -1,5 +1,4 @@
 from flask_login import UserMixin
-from email_validator import validate_email, EmailNotValidError
 from src.domain.entities.common.BaseEntity import (
     BaseEntity, db, schema)
 
@@ -13,7 +12,7 @@ class UserEntity(BaseEntity, UserMixin):
     password_hash = db.Column(db.String(255), nullable=False)
 
     person = db.relationship('PersonEntity', uselist=False, back_populates='user')
-    project = db.relationship('ProjectEntity', uselist=False, back_populates='owner')
+    projects = db.relationship('ProjectEntity', uselist=False, back_populates='owner')
 
     @property
     def is_authenticated(self):
@@ -38,7 +37,7 @@ class UserEntity(BaseEntity, UserMixin):
         self.set_person_id(person_id=person_id)
         self.set_username(username=username)
         self.set_email(email=email)
-        self.set_password(password=password_hash)
+        self.set_password(password_hash=password_hash)
 
     def __repr__(self) -> str:
         return '<User: %r>' % self.username
@@ -46,6 +45,8 @@ class UserEntity(BaseEntity, UserMixin):
     def set_person_id(self, person_id: int) -> None:
         if not isinstance(person_id, int):
             raise ValueError('O person id deve ser um inteiro.')
+
+        self.person_id = person_id
 
     def set_username(self, username: str) -> None:
         if not isinstance(username, str):
@@ -58,12 +59,12 @@ class UserEntity(BaseEntity, UserMixin):
     def set_email(self, email: str) -> None:
         if not isinstance(email, str):
             raise ValueError("O email deve ser uma string.")
-        try:
-            valid = validate_email(email=email)
-            self.email = valid.email
-        except EmailNotValidError as e:
-            raise ValueError(f'O email é inválido: {str(e)}')
-    
+        
+        if not (4 <= len(email) < 255):
+            raise ValueError("O email deve ter no entre 4 e 255 caracteres.")
+
+        self.email = email
+
     def set_password(self, password_hash: str) -> None:
         if not isinstance(password_hash, str):
             raise ValueError("A senha deve ser uma string.")
