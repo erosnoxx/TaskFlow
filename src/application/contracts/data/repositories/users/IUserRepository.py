@@ -4,4 +4,8 @@ from src.domain.entities.users.UserEntity import UserEntity
 
 
 class IUserRepository(ABC, BaseRepository[UserEntity]):
-    pass
+    def get_by_email(self, email: str) -> UserEntity:
+        pass
+    
+    def get_by_username(self, username: str) -> UserEntity:
+        pass
