@@ -1,9 +1,9 @@
-from typing import Type, TypeVar, Generic, List, Optional
 from sqlalchemy.orm import Session
-
+from typing import Type, TypeVar, Generic, List, Optional
 from src.domain.entities.common.BaseEntity import BaseEntity
 
 T = TypeVar('T', bound=BaseEntity)
+
 
 class BaseRepository(Generic[T]):
     def __init__(self, session: Session, entity: Type[T]):
