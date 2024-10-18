@@ -1,3 +1,4 @@
+from flask import Response, make_response
 from flask_restx import fields, Model
 from src.application.extensions.Api import api
 
@@ -28,3 +29,15 @@ class AuthSchemas:
             'message': fields.String(description='Mensagem informativa sobre o resultado do registro.'),
             'id': fields.Integer(description='ID do usuário.')
         })
+
+    @staticmethod
+    def make_success_response(user_id: int) -> Response:
+        response_data = {
+                'success': True,
+                'statuscode': 201,
+                'message': 'Usuário registrado com sucesso.',
+                'id': user_id}
+        response = make_response(response_data, 201)
+        response.headers['Location'] = f'/users/{user_id}'
+        response.headers['Content-Type'] = 'application/json'
+        return response

@@ -1,3 +1,4 @@
+from flask import make_response
 from flask_restx import fields, Model
 from src.application.extensions.Api import api
 
@@ -13,7 +14,7 @@ class ErrorSchemas:
         })
     
     @staticmethod
-    def http_404() -> any:
+    def http_404() -> Model:
         return api.model('Error 404', {
             'success': fields.Boolean(default=False),
             'message': fields.String,
@@ -22,7 +23,7 @@ class ErrorSchemas:
         })
 
     @staticmethod
-    def http_500() -> any:
+    def http_500() -> Model:
         return api.model('Error 500', {
             'success': fields.Boolean(default=False),
             'message': fields.String,
@@ -38,3 +39,15 @@ class ErrorSchemas:
             'details': fields.String,
             'statuscode': fields.Integer(default=409)
         })
+
+    @staticmethod
+    def make_error_response(status_code: int, message: str, details: str=None):
+        response_data = {
+            'success': False,
+            'statuscode': status_code,
+            'message': message,
+            'details': details
+        }
+        response = make_response(response_data, status_code)
+        response.headers['Content-Type'] = 'application/json'
+        return response
