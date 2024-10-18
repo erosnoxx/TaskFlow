@@ -1,15 +1,13 @@
-from flask import current_app, request, make_response
+from flask import current_app, request
 from flask_restx import Resource
+from src.controllers.auth import namespace
 from src.application.useCases.user.CreatePersonUseCase import CreatePersonUseCase
 from src.application.useCases.user.CreateUserUseCase import CreateUserUseCase
-from src.controllers.auth import namespace
 from src.controllers.schemas.AuthSchemas import AuthSchemas
 from src.controllers.schemas.common.ErrorSchemas import ErrorSchemas
 from src.domain.dto.user.input.CreatePersonInputDto import CreatePersonInputDto
 from src.domain.dto.user.input.CreateUserInputDto import CreateUserInputDto
 from src.exceptions.users.InvalidFieldException import InvalidFieldException
-from src.exceptions.users.PersonNotExistsException import PersonNotExistsException
-from src.exceptions.users.UserAlreadyExistsException import UserAlreadyExistsException
 from src.infra.utils.ValidatorsUtil import ValidatorsUtil
 
 
