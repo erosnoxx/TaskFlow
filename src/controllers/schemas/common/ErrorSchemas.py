@@ -1,6 +1,9 @@
 from flask import make_response
 from flask_restx import fields, Model
 from src.application.extensions.Api import api
+from src.exceptions.users.InvalidFieldException import InvalidFieldException
+from src.exceptions.users.PersonNotExistsException import PersonNotExistsException
+from src.exceptions.users.UserAlreadyExistsException import UserAlreadyExistsException
 
 
 class ErrorSchemas:
@@ -51,3 +54,30 @@ class ErrorSchemas:
         response = make_response(response_data, status_code)
         response.headers['Content-Type'] = 'application/json'
         return response
+
+    @staticmethod
+    def handle_exceptions(f: callable):
+        def wrapper(*args, **kwargs):
+            try:
+                return f(*args, **kwargs)
+            except InvalidFieldException as ife:
+                return ErrorSchemas.make_error_response(
+                    status_code=400,
+                    message='Um ou mais campos fornecidos são inválidos.',
+                    details=str(ife))
+            except PersonNotExistsException as pne:
+                return ErrorSchemas.make_error_response(
+                    status_code=404,
+                    message='Erro ao criar usuário.',
+                    details=str(pne))
+            except UserAlreadyExistsException as uae:
+                return ErrorSchemas.make_error_response(
+                    status_code=409,
+                    message='Usuário já registrado com os dados fornecidos.',
+                    details=str(uae))
+            except Exception as e:
+                return ErrorSchemas.make_error_response(
+                    status_code=500,
+                    message='Erro interno no servidor',
+                    details=str(e))
+        return wrapper
