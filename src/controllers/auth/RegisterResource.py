@@ -1,22 +1,20 @@
-from flask import current_app, request, make_response
+from flask import current_app, request
 from flask_restx import Resource
 from src.application.useCases.user.CreatePersonUseCase import CreatePersonUseCase
 from src.application.useCases.user.CreateUserUseCase import CreateUserUseCase
 from src.controllers.auth import namespace
-from src.controllers.schemas.AuthSchemas import AuthSchemas
+from src.controllers.schemas.auth.RegisterSchemas import RegisterSchemas
 from src.controllers.schemas.common.ErrorSchemas import ErrorSchemas
 from src.domain.dto.user.input.CreatePersonInputDto import CreatePersonInputDto
 from src.domain.dto.user.input.CreateUserInputDto import CreateUserInputDto
 from src.exceptions.users.InvalidFieldException import InvalidFieldException
-from src.exceptions.users.PersonNotExistsException import PersonNotExistsException
-from src.exceptions.users.UserAlreadyExistsException import UserAlreadyExistsException
 from src.infra.utils.ValidatorsUtil import ValidatorsUtil
 
 
 class RegisterResource(Resource):
         @namespace.doc("Registra um usuário.")
-        @namespace.expect(AuthSchemas.register_input_schema())
-        @namespace.response(201, 'Created', AuthSchemas.register_output_schema())
+        @namespace.expect(RegisterSchemas.register_input_schema())
+        @namespace.response(201, 'Created', RegisterSchemas.register_output_schema())
         @namespace.response(400, 'Bad Request', ErrorSchemas.http_400())
         @namespace.response(404, 'Not Found', ErrorSchemas.http_404())
         @namespace.response(409, 'Conflict', ErrorSchemas.http_409())
@@ -45,4 +43,4 @@ class RegisterResource(Resource):
                 person_id=person_output_dto.person_entity.id,
                 input_dto=user_input_dto)
 
-            return AuthSchemas.make_success_response(user_id=user_output_dto.user_entity.id)
+            return RegisterSchemas.make_success_response(user_id=user_output_dto.user_entity.id)
