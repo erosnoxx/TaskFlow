@@ -1,5 +1,9 @@
 from src.controllers.auth import namespace
+<<<<<<< HEAD
 from src.controllers.auth.resources.RegisterResource import RegisterResource
+=======
+from src.controllers.auth.RegisterResource import RegisterResource
+>>>>>>> main
 
 
 class AuthController:
