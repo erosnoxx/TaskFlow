@@ -1,4 +1,4 @@
-from flask import current_app, request
+from flask import current_app, request, make_response
 from flask_restx import Resource
 from src.application.useCases.user.CreatePersonUseCase import CreatePersonUseCase
 from src.application.useCases.user.CreateUserUseCase import CreateUserUseCase
@@ -31,74 +31,42 @@ class RegisterResource(Resource):
                     data=data,
                     required_fields=person_required_fields + user_required_fields)
                 if missing_fields:
-                    return ({
-                    'success': False,
-                    'statuscode': 400,
-                    'message': 'Campos obrigatórios estão faltando.',
-                    'details': f"Campos faltantes: {', '.join(missing_fields)}"
-                }, 400)
+                    raise InvalidFieldException(f"Campos faltantes: {', '.join(missing_fields)}")
 
-            except Exception as e:
-                return ({
-                    'success': False,
-                    'statuscode': 500,
-                    'message': 'Erro interno no servidor.',
-                    'details': str(e)
-                }, 500)
-
-            try:
-                person_input_dto = CreatePersonInputDto(
-                    first_name=data.get('first_name'),
-                    last_name=data.get('last_name'),
-                    birthdate=data.get('birthdate'),
-                    phone_number=data.get('phone_number'))
+                person_input_dto = CreatePersonInputDto()
+                person_input_dto.set_attributes(**data)
                 person_usecase: CreatePersonUseCase = current_app.usecases.create_person_usecase
                 person_output_dto = person_usecase.execute(input_dto=person_input_dto)
 
-                user_input_dto = CreateUserInputDto(
-                    username=data.get('username'),
-                    email=data.get('email'),
-                    password=data.get('password'))
+                user_input_dto = CreateUserInputDto()
+                user_input_dto.set_attributes(**data)
                 user_usecase: CreateUserUseCase = current_app.usecases.create_user_usecase
                 user_output_dto = user_usecase.execute(
                     person_id=person_output_dto.person_entity.id,
                     input_dto=user_input_dto)
 
-                return ({
-                        'success': True,
-                        'statuscode': 201,
-                        'message': 'Usuário registrado com sucesso.',
-                        'id': user_output_dto.user_entity.id
-                    }, 201)
+                return AuthSchemas.make_success_response(user_id=user_output_dto.user_entity.id)
 
             except InvalidFieldException as ife:
-                return ({
-                    'success': False,
-                    'statuscode': 400,
-                    'message': 'Um ou mais campos fornecidos são inválidos.',
-                    'details': str(ife)
-                }, 400)
+                return ErrorSchemas.make_error_response(
+                    status_code=400,
+                    message='Um ou mais campos fornecidos são inválidos.',
+                    details=str(ife))
 
             except PersonNotExistsException as pne:
-                    return ({
-                        'success': False,
-                        'statuscode': 404,
-                        'message': 'Erro ao criar usuário.',
-                        'details': str(pne)
-                    }, 404)
+                return ErrorSchemas.make_error_response(
+                    status_code=404,
+                    message='Erro ao criar usuário.',
+                    details=str(pne))
 
             except UserAlreadyExistsException as uae:
-                return ({
-                    'success': False,
-                    'statuscode': 409,
-                    'message': 'Usuário já registrado com os dados fornecidos.',
-                    'details': str(uae)
-                }, 409)
+                return ErrorSchemas.make_error_response(
+                    status_code=409,
+                    message='Usuário já registrado com os dados fornecidos.',
+                    details=str(uae))
 
             except Exception as e:
-                return ({
-                    'success': False,
-                    'statuscode': 500,
-                    'message': 'Erro interno no servidor.',
-                    'details': str(e)
-                }, 500)
+                return ErrorSchemas.make_error_response(
+                    status_code=500,
+                    message='Erro interno no servidor',
+                    details=str(e))
