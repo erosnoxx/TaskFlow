@@ -1,9 +1,9 @@
 from src.controllers.auth import namespace
-<<<<<<< HEAD
+from src.controllers.auth.resources.LoginResource import LoginResource
+from src.controllers.auth.resources.LogoutResource import LogoutResource
 from src.controllers.auth.resources.RegisterResource import RegisterResource
-=======
 from src.controllers.auth.RegisterResource import RegisterResource
->>>>>>> main
+
 
 
 class AuthController:
@@ -12,4 +12,6 @@ class AuthController:
         self.register_routes()
     
     def register_routes(self) -> None:
-        self.namespace.add_resource(RegisterResource, '/register_user')
+        self.namespace.add_resource(RegisterResource, '/users/register')
+        self.namespace.add_resource(LoginResource, '/users/login')
+        self.namespace.add_resource(LogoutResource, '/users/logout')
