@@ -1,6 +1,4 @@
-from flask import make_response
-from flask_restx import fields, Model
-from src.application.extensions.Api import api
+from src.controllers.schemas import *
 from src.exceptions.http.BadRequestException import BadRequestException
 from src.exceptions.http.ConflictException import ConflictException
 from src.exceptions.http.InternalServerException import InternalServerException
@@ -13,7 +11,7 @@ class ErrorSchemas:
     def http_400() -> Model:
         return api.model('Error 400', {
             'success': fields.Boolean(default=False),
-            'message': fields.String,
+            'message': fields.String(default='Requisição inválida. Verifique os dados enviados.'),
             'details': fields.String,
             'statuscode': fields.Integer(default=400)
         })
@@ -22,7 +20,7 @@ class ErrorSchemas:
     def http_404() -> Model:
         return api.model('Error 404', {
             'success': fields.Boolean(default=False),
-            'message': fields.String,
+            'message': fields.String(default='Recurso não encontrado.'),
             'details': fields.String,
             'statuscode': fields.Integer(default=404)
         })
@@ -31,7 +29,7 @@ class ErrorSchemas:
     def http_500() -> Model:
         return api.model('Error 500', {
             'success': fields.Boolean(default=False),
-            'message': fields.String,
+            'message': fields.String(default='Erro interno no servidor.'),
             'details': fields.String,
             'statuscode': fields.Integer(default=500)
         })
@@ -40,7 +38,7 @@ class ErrorSchemas:
     def http_409() -> Model:
         return api.model('Error 409', {
             'success': fields.Boolean(default=False),
-            'message': fields.String,
+            'message': fields.String(default='Conflito nos dados enviados.'),
             'details': fields.String,
             'statuscode': fields.Integer(default=409)
         })
@@ -49,7 +47,7 @@ class ErrorSchemas:
     def http_401() -> Model:
         return api.model('Error 401', {
             'success': fields.Boolean(default=False),
-            'message': fields.String,
+            'message': fields.String(default='Acesso não autorizado.'),
             'details': fields.String,
             'statuscode': fields.Integer(default=401)
         })
@@ -74,31 +72,31 @@ class ErrorSchemas:
             except BadRequestException as bre:
                 return ErrorSchemas.make_error_response(
                     status_code=400,
-                    message='Erro interno no servidor',
+                    message='Requisição inválida.',
                     details=str(bre))
             except ConflictException as ce:
                 return ErrorSchemas.make_error_response(
                     status_code=409,
-                    message='Erro interno no servidor',
+                    message='Conflito nos dados enviados.',
                     details=str(ce))
             except NotFoundException as nfe:
                 return ErrorSchemas.make_error_response(
                     status_code=404,
-                    message='Erro interno no servidor',
+                    message='Recurso não encontrado.',
                     details=str(nfe))
             except UnauthorizedException as ue:
                 return ErrorSchemas.make_error_response(
                     status_code=401,
-                    message='Erro interno no servidor',
+                    message='Acesso não autorizado.',
                     details=str(ue))
             except InternalServerException as ise:
                 return ErrorSchemas.make_error_response(
                     status_code=500,
-                    message='Erro interno no servidor',
+                    message='Erro interno no servidor.',
                     details=str(ise))
             except Exception as e:
                 return ErrorSchemas.make_error_response(
                     status_code=500,
-                    message='Erro interno no servidor',
+                    message='Erro desconhecido.',
                     details=str(e))
         return wrapper
