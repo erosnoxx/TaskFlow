@@ -1,6 +1,4 @@
-from flask import Response, make_response
-from flask_restx import Model, fields
-from src.application.extensions.Api import api
+from src.controllers.schemas import *
 
 
 class LoginSchemas:
@@ -25,12 +23,12 @@ class LoginSchemas:
             'id': fields.Integer(description='ID do usuário.')})
 
     @staticmethod
-    def make_success_response(user_id: int) -> Response:
+    def make_success_response(username: str) -> Response:
         response_data = {
                 'success': True,
                 'statuscode': 200,
                 'message': 'Usuário logado com sucesso.',
-                'id': user_id}
+                'username': username}
         response = make_response(response_data, 200)
         response.headers['Content-Type'] = 'application/json'
         return response

@@ -1,6 +1,5 @@
-from flask import Response, make_response
-from flask_restx import fields, Model
-from src.application.extensions.Api import api
+from src.controllers.schemas import *
+from src.controllers.users import namespace as namespace_users
 
 
 class RegisterSchemas:
@@ -9,7 +8,7 @@ class RegisterSchemas:
         return api.model('Register Person Input', {
             'first_name': fields.String(required=True, description='Primeiro nome do usuário.'),
             'last_name': fields.String(required=True, description='Sobrenome do usuário.'),
-            'birthdate': fields.Date(description='Data de nascimento do usuário.'),
+            'birthdate': fields.String(description='Data de nascimento do usuário.', example='2000-01-01'),
             'phone_number': fields.String(required=True, description='Número de telefone do usuário.'),
             'username': fields.String(required=True, description='Nome de usuário para login.'),
             'email': fields.String(
@@ -29,13 +28,13 @@ class RegisterSchemas:
             'id': fields.Integer(description='ID do usuário.')})
 
     @staticmethod
-    def make_success_response(user_id: int) -> Response:
+    def make_success_response(username: str) -> Response:
         response_data = {
                 'success': True,
                 'statuscode': 201,
                 'message': 'Usuário registrado com sucesso.',
-                'id': user_id}
+                'username': username}
         response = make_response(response_data, 201)
-        response.headers['Location'] = f'/users/{user_id}'
+        response.headers['Location'] = f'{api.prefix}/{namespace_users.name}/{username}'
         response.headers['Content-Type'] = 'application/json'
         return response
