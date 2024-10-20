@@ -12,3 +12,4 @@ class GlobalServices:
         self.crypt_service = CryptService()
         self.person_service = PersonService(person_repository=repositories.person_repository)
         self.user_service = UserService(user_repository=repositories.user_repository)
+    

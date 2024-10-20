@@ -2,6 +2,8 @@ from src.application.config.GlobalServices import GlobalServices
 from src.application.useCases.user.AuthenticateUserUseCase import AuthenticateUserUseCase
 from src.application.useCases.user.CreatePersonUseCase import CreatePersonUseCase
 from src.application.useCases.user.CreateUserUseCase import CreateUserUseCase
+from src.application.useCases.user.GetAllUsersUseCase import GetAllUsersUseCase
+from src.application.useCases.user.GetUserUseCase import GetUserUseCase
 
 
 class GlobalUseCases:
@@ -14,3 +16,5 @@ class GlobalUseCases:
         self.authenticate_user_usecase = AuthenticateUserUseCase(
             user_service=services.user_service,
             hash_service=services.hash_service)
+        self.get_user_usecase = GetUserUseCase(user_service=services.user_service)
+        self.get_all_users_usecase = GetAllUsersUseCase(user_service=services.user_service)

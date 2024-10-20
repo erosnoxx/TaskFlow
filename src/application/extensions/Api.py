@@ -7,3 +7,4 @@ class Api:
     def __init__(self, app: Flask):
         api.init_app(app=app)
         api.add_namespace(app.controllers.auth_controller.namespace)
+        api.add_namespace(app.controllers.user_controller.namespace)
