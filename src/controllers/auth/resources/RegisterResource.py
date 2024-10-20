@@ -43,4 +43,4 @@ class RegisterResource(Resource):
                 person_id=person_output_dto.person_entity.id,
                 input_dto=user_input_dto)
 
-            return RegisterSchemas.make_success_response(user_id=user_output_dto.user_entity.id)
+            return RegisterSchemas.make_success_response(username=user_output_dto.user_entity.username)

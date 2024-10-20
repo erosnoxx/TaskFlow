@@ -39,4 +39,4 @@ class LoginResource(Resource):
         
         login_user(authenticate_user_output_dto.user_entity)
         
-        return LoginSchemas.make_success_response(user_id=authenticate_user_output_dto.user_entity.id)
+        return LoginSchemas.make_success_response(username=authenticate_user_output_dto.user_entity.username)

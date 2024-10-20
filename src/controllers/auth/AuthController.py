@@ -2,7 +2,6 @@ from src.controllers.auth import namespace
 from src.controllers.auth.resources.LoginResource import LoginResource
 from src.controllers.auth.resources.LogoutResource import LogoutResource
 from src.controllers.auth.resources.RegisterResource import RegisterResource
-from src.controllers.auth.RegisterResource import RegisterResource
 
 
 

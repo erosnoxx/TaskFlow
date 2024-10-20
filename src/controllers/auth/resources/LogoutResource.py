@@ -16,14 +16,14 @@ class LogoutResource(Resource):
             response.headers['Content-Type'] = 'application/json'
             return response
 
-        user_id = current_user.id
+        username = current_user.username
         logout_user()
         
         response_data = {
             'success': True,
             'statuscode': 200,
             'message': 'Usuário deslogado com sucesso.',
-            'id': user_id
+            'username': username
         }
         response = make_response(response_data, 200)
 
