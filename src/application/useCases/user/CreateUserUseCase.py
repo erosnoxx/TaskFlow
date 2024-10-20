@@ -30,12 +30,12 @@ class CreateUserUseCase:
             self.person_service.delete_person_by_id(person_id=person_id)
             raise InvalidFieldException('Senha inválida.')
         
-        user_entity = self.user_service.find_email(email=input_dto.email)
+        user_entity = self.user_service.find_by_email(email=input_dto.email)
         if user_entity is not None:
             self.person_service.delete_person_by_id(person_id=person_id)
             raise UserAlreadyExistsException('Email já registrado.')
         
-        user_entity = self.user_service.find_username(username=input_dto.username)
+        user_entity = self.user_service.find_by_username(username=input_dto.username)
         if user_entity is not None:
             self.person_service.delete_person_by_id(person_id=person_id)
             raise UserAlreadyExistsException('Nome de usuário já registrado.')

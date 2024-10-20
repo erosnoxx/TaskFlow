@@ -27,11 +27,11 @@ class AuthenticateUserUseCase:
 
             if input_dto.email:
                 validate_email(input_dto.email)
-                user_entity = self.user_service.find_email(email=input_dto.email)
+                user_entity = self.user_service.find_by_email(email=input_dto.email)
                 if user_entity is None:
                     raise UserNotExistsException('Email não registrado.')
             elif input_dto.username:
-                user_entity = self.user_service.find_username(username=input_dto.username)
+                user_entity = self.user_service.find_by_username(username=input_dto.username)
                 if user_entity is None:
                     raise UserNotExistsException('Username não registrado.')
 
