@@ -25,6 +25,14 @@ class PersonEntity(BaseEntity):
     @property
     def full_name(self) -> str:
         return f'{self.first_name} {self.last_name}'
+    
+    @property
+    def age(self) -> int:
+        today = date.today()
+        age = today.year - self.birthdate.year
+        if (today.month, today.day) < (self.birthdate.month, self.birthdate.day):
+            age -= 1
+        return age
 
     def __repr__(self) -> str:
         return '<Person: %r>' % self.full_name
